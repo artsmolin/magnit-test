@@ -1,0 +1,107 @@
+---
+openapi: 3.0.0
+info:
+  title: Magnit Test API
+  description: |
+    Magnit Test API
+  version: 1.0.0-oas3
+servers:
+- url: /
+paths:
+  /tasks:
+    get:
+      summary: Get tasks collection
+      responses:
+        "200":
+          description: Return task ID
+          content:
+            application/text:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskItem'
+    post:
+      summary: Create new task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTask'
+      responses:
+        "200":
+          description: Return task ID
+          content:
+            application/text:
+              schema:
+                type: string
+                example: b2fc1b72-02a3-4023-9ceb-9384eaaac47b
+        "400":
+          description: Invalid input
+  /tasks/{id}/result:
+    get:
+      parameters:
+      - name: id
+        in: path
+        description: Task ID
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: b2fc1b72-02a3-4023-9ceb-9384eaaac47b
+      responses:
+        "200":
+          description: Return task execution result
+          content:
+            application/text:
+              schema:
+                type: string
+                example: "3"
+        "404":
+          description: Invalid input
+components:
+  schemas:
+    CreateTask:
+      required:
+      - operator
+      - x
+      - "y"
+      type: object
+      properties:
+        x:
+          type: integer
+          example: 1
+        y:
+          type: integer
+          example: 2
+        operator:
+          type: string
+          description: One of '+', '-', '*', '/'
+          example: '+'
+    TaskItem:
+      required:
+      - operator
+      - x
+      - "y"
+      type: object
+      properties:
+        x:
+          type: integer
+          example: 1
+        y:
+          type: integer
+          example: 2
+        operator:
+          type: string
+          description: One of '+', '-', '*', '/'
+          example: '+'
+        id:
+          type: string
+          example: b2fc1b72-02a3-4023-9ceb-9384eaaac47b
+        result:
+          type: integer
+          example: 3
+        status:
+          type: string
+          description: One of "done", "created"
+          example: done
